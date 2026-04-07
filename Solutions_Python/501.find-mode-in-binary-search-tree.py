@@ -1,7 +1,7 @@
 '''
 Author: Hannah
 Date: 2026-04-05 21:23:41
-LastEditTime: 2026-04-05 21:39:26
+LastEditTime: 2026-04-06 17:36:28
 '''
 #
 # @lc app=leetcode id=501 lang=python3
@@ -25,8 +25,41 @@ class Solution:
         self.inOrder(node.right, lst)
 
     def findMode(self, root: Optional[TreeNode]) -> List[int]:
-        # Method: in-order traversal
+
+        # Method 2: in-ortder traversal
+        # only scan the tree once
+        self.ans = []
+        self.pre = None
+        self.cnt = 0
+        self.max_cnt = 0
+
+        def dfs(node):
+            if node is None:
+                return
+            # left tree
+            dfs(node.left)
+            # root node
+            if node.val == self.pre:
+                self.cnt += 1
+            else:
+                self.cnt = 1
+                self.pre = node.val
+
+            if self.cnt == self.max_cnt:
+                self.ans.append(node.val)
+            elif self.cnt > self.max_cnt:
+                self.max_cnt = self.cnt
+                self.ans = [node.val]
+            # right tree
+            dfs(node.right)
+        
+        dfs(root)
+
+        return self.ans
+
+        # Method 1: in-order traversal
         # Because it's Binary Search Tree, in-order traversal gives us a non-decreasing sequence
+        # We can convert the tree in to a array first
 
         # a list to store the value of i-th node, covert the tree to a ordered array
         lst = []
@@ -59,5 +92,6 @@ class Solution:
             pre = lst[i]
 
         return ans
+    
 # @lc code=end
 
